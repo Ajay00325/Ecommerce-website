@@ -18,11 +18,27 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadImage(String path, MultipartFile file) throws IOException {
 
+    try {
+
+        System.out.println("========== CLOUDINARY UPLOAD START ==========");
+        System.out.println("File Name : " + file.getOriginalFilename());
+
         Map<?, ?> uploadResult = cloudinary.uploader().upload(
                 file.getBytes(),
                 ObjectUtils.emptyMap()
         );
 
+        System.out.println("UPLOAD SUCCESS");
+        System.out.println(uploadResult);
+
         return uploadResult.get("secure_url").toString();
+
+    } catch (Exception e) {
+
+        System.out.println("========== CLOUDINARY ERROR ==========");
+        e.printStackTrace();
+
+        throw e;
     }
+}
 }
