@@ -212,8 +212,21 @@ public void printImageBaseUrl() {
     }
 
     private String constructImageUrl(String imageName) {
-        return imageBaseUrl.endsWith("/") ? imageBaseUrl + imageName : imageBaseUrl + "/" + imageName;
+
+    if (imageName == null || imageName.isBlank()) {
+        return null;
     }
+
+    // If it's already a full URL (Cloudinary), return it directly
+    if (imageName.startsWith("http://") || imageName.startsWith("https://")) {
+        return imageName;
+    }
+
+    // Otherwise, build the local image URL
+    return imageBaseUrl.endsWith("/")
+            ? imageBaseUrl + imageName
+            : imageBaseUrl + "/" + imageName;
+}
 
     private boolean isDeleted(Product product) {
         return Boolean.TRUE.equals(product.getDeleted());
