@@ -41,11 +41,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         System.out.println("REQUEST URI = " + request.getRequestURI());
         
-        String path = request.getServletPath();
+      String path = request.getServletPath();
 
-        if (path.startsWith("/images/")
+       System.out.println("PATH = " + path);
+
+       if (path.startsWith("/images/")
         || path.startsWith("/api/public/")
         || path.equals("/favicon.ico")) {
+
+     System.out.println("SKIPPING FILTER FOR: " + path);
+
     filterChain.doFilter(request, response);
     return;
 }
