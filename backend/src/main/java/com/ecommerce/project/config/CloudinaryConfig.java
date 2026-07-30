@@ -18,13 +18,20 @@ public class CloudinaryConfig {
     @Value("${cloudinary.api_secret}")
     private String apiSecret;
 
-    @Bean
-    public Cloudinary cloudinary() {
-        return new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", cloudName,
-                "api_key", apiKey,
-                "api_secret", apiSecret,
-                "secure", true
-        ));
-    }
+   @Bean
+public Cloudinary cloudinary() {
+
+    System.out.println("==================================");
+    System.out.println("Cloud Name  : " + cloudName);
+    System.out.println("API Key     : " + apiKey);
+    System.out.println("API Secret? : " + (apiSecret != null));
+    System.out.println("==================================");
+
+    return new Cloudinary(ObjectUtils.asMap(
+            "cloud_name", cloudName,
+            "api_key", apiKey,
+            "api_secret", apiSecret,
+            "secure", true
+    ));
+}
 }
