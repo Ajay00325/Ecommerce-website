@@ -113,10 +113,10 @@ public class WebSecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
 
-        http.addFilterBefore(
-                authTokenFilter,
-                UsernamePasswordAuthenticationFilter.class
-        );
+        // http.addFilterBefore(
+        //         authTokenFilter,
+        //         UsernamePasswordAuthenticationFilter.class
+        // );
         http.headers(headers -> headers.frameOptions(
                 frameOptions -> frameOptions.sameOrigin()));
 
