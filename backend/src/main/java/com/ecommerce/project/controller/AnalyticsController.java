@@ -18,7 +18,11 @@ public class AnalyticsController {
 
     @GetMapping("/admin/app/analytics")
     public ResponseEntity<AnalyticsResponse> getAnalytics() {
-        AnalyticsResponse response = analyticsService.getAnalyticsData();
-        return new ResponseEntity<AnalyticsResponse>(response, HttpStatus.OK);
-    }
+
+    System.out.println("INSIDE ANALYTICS CONTROLLER");
+
+    AnalyticsResponse response = analyticsService.getAnalyticsData();
+
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
 }

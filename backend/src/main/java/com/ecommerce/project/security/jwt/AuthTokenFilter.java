@@ -31,109 +31,108 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-
     @Override
     protected void doFilterInternal(
-        
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("REQUEST URI = " + request.getRequestURI());
-        
-      String path = request.getServletPath();
 
-       System.out.println("PATH = " + path);
+        System.out.println("\n==================================================");
+        System.out.println("FILTER START");
+        System.out.println("REQUEST URI  = " + request.getRequestURI());
+        System.out.println("SERVLET PATH = " + request.getServletPath());
+        System.out.println("==================================================");
 
-       if (path.startsWith("/images/")
-        || path.startsWith("/api/public/")
-        || path.equals("/favicon.ico")) {
+        String path = request.getServletPath();
 
-     System.out.println("SKIPPING FILTER FOR: " + path);
+        if (path.startsWith("/images/")
+                || path.startsWith("/api/public/")
+                || path.equals("/favicon.ico")) {
 
-    filterChain.doFilter(request, response);
-    return;
-}
-        System.out.println("===== AUTH FILTER EXECUTED =====");
+            System.out.println("SKIPPING FILTER FOR : " + path);
 
-        logger.info("========================================");
-        logger.info("REQUEST URI: {}", request.getRequestURI());
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        logger.info("===== AUTH FILTER EXECUTED =====");
 
         try {
 
             String jwt = parseJwt(request);
 
-            logger.info("JWT FOUND: {}", jwt != null);
+            logger.info("JWT FOUND : {}", jwt != null);
 
             if (jwt != null) {
-                logger.info("JWT TOKEN: {}", jwt);
+                logger.info("JWT TOKEN : {}", jwt);
             }
 
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
 
                 logger.info("JWT IS VALID");
 
-                String username =
-                        jwtUtils.getUserNameFromJwtToken(jwt);
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-                logger.info("USERNAME FROM JWT: {}", username);
+                logger.info("USERNAME FROM JWT : {}", username);
 
                 UserDetails userDetails =
                         userDetailsService.loadUserByUsername(username);
 
-                logger.info("USER FOUND: {}", userDetails.getUsername());
+                logger.info("USER FOUND : {}", userDetails.getUsername());
 
-                logger.info("AUTHORITIES: {}",
-                        userDetails.getAuthorities());
+                logger.info("AUTHORITIES : {}", userDetails.getAuthorities());
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
-                                userDetails.getAuthorities()
-                        );
+                                userDetails.getAuthorities());
 
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource()
-                                .buildDetails(request)
-                );
+                                .buildDetails(request));
 
-                SecurityContextHolder
-                        .getContext()
-                        .setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 logger.info("AUTHENTICATION SUCCESS");
+
+                // ===== NEW DEBUG LOGS =====
+                System.out.println("-----------------------------------");
+                System.out.println("SECURITY CONTEXT AFTER LOGIN");
+                System.out.println(SecurityContextHolder.getContext().getAuthentication());
+                System.out.println("-----------------------------------");
 
             } else {
 
                 logger.error("JWT INVALID OR NULL");
-
             }
 
         } catch (Exception e) {
 
             logger.error("AUTHENTICATION ERROR", e);
-
+            e.printStackTrace();
         }
+
+        System.out.println("FILTER END");
+        System.out.println("==================================================\n");
 
         filterChain.doFilter(request, response);
     }
 
     private String parseJwt(HttpServletRequest request) {
 
-        String jwtFromCookie =
-                jwtUtils.getJwtFromCookies(request);
+        String jwtFromCookie = jwtUtils.getJwtFromCookies(request);
 
-        logger.info("JWT FROM COOKIE: {}", jwtFromCookie);
+        logger.info("JWT FROM COOKIE : {}", jwtFromCookie);
 
         if (jwtFromCookie != null) {
             return jwtFromCookie;
         }
 
-        String jwtFromHeader =
-                jwtUtils.getJwtFromHeader(request);
+        String jwtFromHeader = jwtUtils.getJwtFromHeader(request);
 
-        logger.info("JWT FROM HEADER: {}", jwtFromHeader);
+        logger.info("JWT FROM HEADER : {}", jwtFromHeader);
 
         return jwtFromHeader;
     }
