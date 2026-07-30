@@ -28,7 +28,7 @@ const PaymentForm = ({ clientSecret, totalPrice }) => {
             elements,
             clientSecret,
             confirmParams: {
-                return_url: "http://localhost:5173/order-confirm",
+               return_url: "https://ecommerce-website-snowy-eight.vercel.app/order-confirm",
             },
         });
 
