@@ -123,12 +123,20 @@ public void printImageBaseUrl() {
         List<Product> products = pageProducts.getContent();
 
         List<ProductDTO> productDTOS = products.stream()
-                .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
-                    productDTO.setImage(constructImageUrl(product.getImage()));
-                    return productDTO;
-                })
-                .toList();
+        .map(product -> {
+            ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+
+            String url = constructImageUrl(product.getImage());
+
+            System.out.println("======================================");
+            System.out.println("Image From DB : " + product.getImage());
+            System.out.println("Constructed   : " + url);
+            System.out.println("======================================");
+
+            productDTO.setImage(url);
+            return productDTO;
+        })
+        .toList();
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
