@@ -71,21 +71,24 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
-    configuration.setAllowedOrigins(List.of(
-        "https://ecommerce-website-snowy-eight.vercel.app",
-        "https://ecommerce-website-nwf3ugdoo-ajay-2f94.vercel.app"
-     ));
+    configuration.setAllowedOriginPatterns(List.of(
+            "https://*.vercel.app"
+    ));
 
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedMethods(List.of(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS"
+    ));
+
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+
     source.registerCorsConfiguration("/**", configuration);
 
     return source;
-    }
-
+}
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
