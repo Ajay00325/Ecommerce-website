@@ -81,11 +81,18 @@ public class ProductController {
     }
 
     @PutMapping("/admin/products/{productId}/image")
-    public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
-                                                         @RequestParam("image")MultipartFile image) throws IOException {
-        ProductDTO updatedProduct = productService.updateProductImage(productId, image);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
-    }
+public ResponseEntity<ProductDTO> updateProductImage(
+        @PathVariable Long productId,
+        @RequestParam("image") MultipartFile image) throws IOException {
+
+    System.out.println("========== IMAGE UPLOAD CONTROLLER ==========");
+    System.out.println("Product ID : " + productId);
+    System.out.println("Image Name : " + image.getOriginalFilename());
+
+    ProductDTO updatedProduct = productService.updateProductImage(productId, image);
+
+    return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+}
 
 
     @GetMapping("/admin/products")

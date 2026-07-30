@@ -356,16 +356,28 @@ public void printImageBaseUrl() {
     }
 
     @Override
-    public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
-        Product productFromDb = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+      public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
 
-        String fileName = fileService.uploadImage(path, image);
-        productFromDb.setImage(fileName);
+    System.out.println("========== SERVICE ENTERED ==========");
+    System.out.println("Product ID = " + productId);
+    System.out.println("Original File = " + image.getOriginalFilename());
 
-        Product updatedProduct = productRepository.save(productFromDb);
-        return modelMapper.map(updatedProduct, ProductDTO.class);
-    }
+    Product productFromDb = productRepository.findById(productId)
+            .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+    System.out.println("Product found in DB");
+
+    String fileName = fileService.uploadImage(path, image);
+    System.out.println("Cloudinary URL = " + fileName);
+
+    productFromDb.setImage(fileName);
+
+    Product updatedProduct = productRepository.save(productFromDb);
+
+    System.out.println("Product updated successfully");
+
+    return modelMapper.map(updatedProduct, ProductDTO.class);
+}
 
 
 }
