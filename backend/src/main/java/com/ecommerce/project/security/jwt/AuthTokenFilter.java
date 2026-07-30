@@ -1,10 +1,7 @@
 package com.ecommerce.project.security.jwt;
 
-import com.ecommerce.project.security.services.UserDetailsServiceImpl;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
+import com.ecommerce.project.security.services.UserDetailsServiceImpl;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -35,6 +37,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
+        
+        String path = request.getServletPath();
+
+        if (path.startsWith("/images/")
+        || path.startsWith("/api/public/")
+        || path.equals("/favicon.ico")) {
+    filterChain.doFilter(request, response);
+    return;
+}
         System.out.println("===== AUTH FILTER EXECUTED =====");
 
         logger.info("========================================");
