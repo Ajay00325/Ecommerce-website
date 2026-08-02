@@ -356,25 +356,41 @@ public void printImageBaseUrl() {
     }
 
     @Override
-      public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
 
     System.out.println("========== SERVICE ENTERED ==========");
     System.out.println("Product ID = " + productId);
     System.out.println("Original File = " + image.getOriginalFilename());
 
     Product productFromDb = productRepository.findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Product", "productId", productId));
 
     System.out.println("Product found in DB");
+    System.out.println("Old Image = " + productFromDb.getImage());
 
+    // Upload image to Cloudinary
     String fileName = fileService.uploadImage(path, image);
+
     System.out.println("Cloudinary URL = " + fileName);
 
+    // Save Cloudinary URL
     productFromDb.setImage(fileName);
 
+    // Save into database
     Product updatedProduct = productRepository.save(productFromDb);
 
-    System.out.println("Product updated successfully");
+    // Verify saved value
+    System.out.println("Saved Image = " + updatedProduct.getImage());
+
+    // Read again from DB to verify
+    Product checkProduct = productRepository.findById(productId)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Product", "productId", productId));
+
+    System.out.println("Image From DB = " + checkProduct.getImage());
+
+    System.out.println("========== UPDATE COMPLETED ==========");
 
     return modelMapper.map(updatedProduct, ProductDTO.class);
 }
