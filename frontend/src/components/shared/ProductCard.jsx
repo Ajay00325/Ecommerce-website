@@ -40,9 +40,9 @@ const ProductCard = ({
 
     return (
         <>
-            <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition duration-300 border overflow-hidden">
+            <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden border">
 
-                {/* Image */}
+                {/* Product Image */}
                 <div
                     onClick={() =>
                         handleProductView({
@@ -56,7 +56,7 @@ const ProductCard = ({
                             specialPrice,
                         })
                     }
-                    className="h-60 flex items-center justify-center bg-gray-50 cursor-pointer"
+                    className="h-60 bg-white flex items-center justify-center cursor-pointer p-4"
                 >
                     <img
                         src={getProductImageUrl(image)}
@@ -66,7 +66,7 @@ const ProductCard = ({
                     />
                 </div>
 
-                {/* Details */}
+                {/* Product Details */}
                 <div className="p-5">
 
                     <h2
@@ -82,54 +82,69 @@ const ProductCard = ({
                                 specialPrice,
                             })
                         }
-                        className="text-xl font-semibold text-gray-800 cursor-pointer leading-7 h-14"
+                        className="text-xl font-semibold text-gray-900 cursor-pointer leading-7 min-h-[56px]"
                     >
-                        {truncateText(productName, 40)}
+                        {truncateText(productName, 35)}
                     </h2>
 
-                    <p className="text-sm text-gray-500 mt-3 h-14">
-                        {truncateText(description, 75)}
-                    </p>
-
-                    {specialPrice ? (
-                        <>
-                            <p className="text-gray-400 line-through text-sm mt-4">
-                                {formatPrice(price)}
-                            </p>
-
-                            <p className="text-3xl font-bold text-slate-900">
-                                {formatPrice(specialPrice)}
-                            </p>
-                        </>
-                    ) : (
-                        <p className="text-3xl font-bold text-slate-900 mt-4">
-                            {formatPrice(price)}
+                    <div className="mt-3 min-h-[60px]">
+                        <p className="text-gray-500 text-sm leading-6">
+                            {truncateText(description, 75)}
                         </p>
-                    )}
+                    </div>
 
                     {!about && (
-                        <button
-                            disabled={!isAvailable}
-                            onClick={() =>
-                                addToCartHandler({
-                                    image,
-                                    productName,
-                                    description,
-                                    specialPrice,
-                                    price,
-                                    productId,
-                                    quantity,
-                                })
-                            }
-                            className={`w-full mt-5 py-3 rounded-xl text-white font-medium flex justify-center items-center gap-2 transition ${
-                                isAvailable
-                                    ? "bg-blue-600 hover:bg-blue-700"
-                                    : "bg-gray-400 cursor-not-allowed"
-                            }`}
-                        >
-                            <FaShoppingCart />
-                            {isAvailable ? "Add to Cart" : "Out of Stock"}
-                        </button>
+                        <div className="flex justify-between items-end mt-5 gap-3">
+
+                            {/* Price */}
+                            <div className="flex-1">
+
+                                {specialPrice ? (
+                                    <>
+                                        <p className="text-gray-400 line-through text-sm">
+                                            {formatPrice(price)}
+                                        </p>
+
+                                        <h3 className="text-2xl font-bold text-slate-900">
+                                            {formatPrice(specialPrice)}
+                                        </h3>
+                                    </>
+                                ) : (
+                                    <h3 className="text-2xl font-bold text-slate-900">
+                                        {formatPrice(price)}
+                                    </h3>
+                                )}
+
+                            </div>
+
+                            {/* Add To Cart Button */}
+                            <button
+                                disabled={!isAvailable}
+                                onClick={() =>
+                                    addToCartHandler({
+                                        image,
+                                        productName,
+                                        description,
+                                        specialPrice,
+                                        price,
+                                        productId,
+                                        quantity,
+                                    })
+                                }
+                                className={`${
+                                    isAvailable
+                                        ? "bg-blue-600 hover:bg-blue-700"
+                                        : "bg-gray-400 cursor-not-allowed"
+                                } text-white rounded-lg px-5 py-3 flex items-center gap-2 transition duration-300`}
+                            >
+                                <FaShoppingCart />
+
+                                <span className="font-medium whitespace-nowrap">
+                                    {isAvailable ? "Add to Cart" : "Out of Stock"}
+                                </span>
+                            </button>
+
+                        </div>
                     )}
                 </div>
             </div>
